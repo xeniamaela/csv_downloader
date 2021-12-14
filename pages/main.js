@@ -12,7 +12,8 @@ const Main = ({authAxios}) => {
 
     authAxios.get('/customers')
     .then(result => {
-      const shopper = result.data.body.customers.map(customer => {return customer})
+      const shopper = result.data.body.customers.map(customer => {
+        return {customer}})
       const length = result.data.body.customers.length
 
       for(let i = 0; i < length; i++) {
