@@ -1,6 +1,6 @@
 import React ,{useEffect, useState, useCallback} from 'react';
 import { Page, Card, Tabs, Button, DataTable, TextField } from "@shopify/polaris";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 const Index = ({authAxios}) => {
 

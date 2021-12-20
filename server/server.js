@@ -18,8 +18,8 @@ const handle = app.getRequestHandler();
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES,
-  HOST_NAME: process.env.HOST,
+  SCOPES: process.env.SCOPES.split(','),
+  HOST_NAME: process.env.HOST.replace(/https:\/\/|\/$/g, ""),
   API_VERSION: ApiVersion.October20,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
@@ -89,7 +89,6 @@ app.prepare().then(async () => {
       path: 'customers',
       query: {limit:250} 
     });
-
 
     let newPageInfo;
     customers = [...data.body.customers]

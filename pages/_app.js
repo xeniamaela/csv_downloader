@@ -78,5 +78,11 @@ class MyApp extends App {
   }
 }
 
+MyApp.getInitialProps = async ({ ctx }) => {
+  return {
+    host: ctx.query.host,
+  };
+};
+
 
 export default MyApp;
