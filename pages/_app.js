@@ -60,6 +60,12 @@ function MyProvider(props) {
 }
 
 class MyApp extends App {
+  getInitialProps = async ({ ctx }) => {
+    return {
+      host: ctx.query.host,
+    };
+  };
+
   render() {
     const { Component, pageProps, host } = this.props;
     return (
@@ -77,12 +83,5 @@ class MyApp extends App {
     );
   }
 }
-
-MyApp.getInitialProps = async ({ ctx }) => {
-  return {
-    host: ctx.query.host,
-  };
-};
-
 
 export default MyApp;
