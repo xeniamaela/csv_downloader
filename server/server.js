@@ -19,7 +19,7 @@ Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
   SCOPES: 'write_products,write_customers,write_draft_orders',
-  HOST_NAME: process.env.HOST.replace(/https:\/\/|\/$/g, ""),
+  HOST_NAME: process.env.HOST,
   API_VERSION: ApiVersion.October20,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
