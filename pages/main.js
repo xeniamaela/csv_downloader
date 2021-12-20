@@ -1,40 +1,68 @@
-import { Page, Card, Tabs, Button, DataTable } from "@shopify/polaris";
+import { Page, Card, Tabs, Button, DataTable, TextField } from "@shopify/polaris";
 import React, {useEffect, useState, useCallback} from 'react';
 import { CSVLink, CSVDownload } from "react-csv";
 
 const Main = ({authAxios}) => {
 
-  const [columnHeaders, setColumnHeaders] = useState('')
-  const [columnData, setcolumnData] = useState('')
   const [selected, setSelected] = useState(0);
+  const [customers, setCustomers] = useState([]);
+  const [filename, setFileName] = useState('');
 
   useEffect(() => {
 
     authAxios.get('/customers')
     .then(result => {
-      const shopper = result.data.body.customers.map(customer => {
-        return {customer}})
-      const length = result.data.body.customers.length
-
-      for(let i = 0; i < length; i++) {
-        console.log(Object.keys(shopper[i]))
-        const columnHeaders = Object.keys(shopper[i])
-        const columnData = (shopper[i])
-        setColumnHeaders(columnHeaders)
-        setcolumnData(columnData)
-      } 
-
+      // console.log(result)
+      setCustomers(result.data)
     }).catch(error => { console.log(error)})
 
   }, [authAxios])
 
-  const headers = [{columnHeaders}];
-  const data = [{columnData}];
+  const handleFilename = useCallback((fileName) => setFileName(fileName), []);
 
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     [],
   );
+
+  const heading = [
+    "id",
+    "email",
+    "first_name",
+    "last_name",
+    "created_at",
+    "updated_at",
+    "orders_count","state",
+    "total_spent",
+    "phone",
+    "currency",
+    "accepts_marketing_updated_at",
+    "marketing_opt_in_level",
+    "admin_graphql_api_id"
+  ]
+
+  const contentType = [
+    'text', 'text', 'text', 'text', 'text','text'
+  ]
+
+  const row = customers.map(customer => {
+    return [
+    customer.id.toString(),
+    customer.email,
+    customer.first_name,
+    customer.last_name,
+    customer.created_at,
+    customer.updated_at,
+    customer.orders_count,
+    customer.state,
+    customer.total_spent,
+    customer.phone,
+    customer.currency,
+    customer.accepts_marketing_updated_at,
+    customer.marketing_opt_in_level,
+    customer.admin_graphql_api_id
+    ]
+  })
 
   const tabs = [
     {
@@ -68,8 +96,26 @@ const Main = ({authAxios}) => {
     >
       <Card>
         <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}>
-          <Card.Section title={tabs[selected].content}>
-            <CSVLink data={headers}>Download me</CSVLink>
+          <Card.Section>
+            <TextField
+              label="Change file name"
+              value={filename}
+              onChange={handleFilename}
+              placeholder="File name"
+              autoComplete="off"
+            />
+            <CSVLink
+              headers={heading}
+              data={row}
+              filename={filename}
+            >Download me</CSVLink>
+          </Card.Section>
+          <Card.Section>
+            <DataTable
+                columnContentTypes={contentType}
+                headings={heading}
+                rows={row}
+            />
           </Card.Section>
         </Tabs>
       </Card>

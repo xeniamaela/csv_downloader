@@ -18,7 +18,7 @@ const handle = app.getRequestHandler();
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES.split(","),
+  SCOPES: process.env.SCOPES,
   HOST_NAME: process.env.HOST.replace(/https:\/\/|\/$/g, ""),
   API_VERSION: ApiVersion.October20,
   IS_EMBEDDED_APP: true,
@@ -82,14 +82,36 @@ app.prepare().then(async () => {
   })
 
   router.get("/customers", verifyRequest({returnHeader: true}), async(ctx) => {
+    let customers = [];
     const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.get({
       path: 'customers',
+      query: {limit:250} 
     });
 
+
+    let newPageInfo;
+    customers = [...data.body.customers]
+    
+    newPageInfo = data.pageInfo.nextPage.query.page_info;
+    console.log(newPageInfo);
+      
+    while(newPageInfo) {
+
+        const nextPage = await client.get({
+          path: 'customers',
+          query: {page_info: newPageInfo, limit:250}
+        })
+        customers = [...customers, ...nextPage.body.customers]
+        // console.log(nextPage.pageInfo.nextPage.query.page_info)
+
+        newPageInfo = nextPage.pageInfo.nextPage !== undefined && nextPage.pageInfo.nextPage.query.page_info
+    }
+
+    // console.log(customers)
     ctx.status = 200;
-    ctx.body = data;
+    ctx.body = customers;
   })
 
   router.get("/products", verifyRequest({returnHeader: true}), async(ctx) => {
