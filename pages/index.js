@@ -1,4 +1,3 @@
-import React from 'react'
 import { Page, Card, Tabs, Button, DataTable, TextField } from "@shopify/polaris";
 import React, {useEffect, useState, useCallback} from 'react';
 import { CSVLink, CSVDownload } from "react-csv";
