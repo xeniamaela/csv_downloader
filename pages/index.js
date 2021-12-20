@@ -1,5 +1,5 @@
+import React ,{useEffect, useState, useCallback} from 'react';
 import { Page, Card, Tabs, Button, DataTable, TextField } from "@shopify/polaris";
-import React, {useEffect, useState, useCallback} from 'react';
 import { CSVLink, CSVDownload } from "react-csv";
 
 const Index = ({authAxios}) => {
@@ -87,8 +87,7 @@ const Index = ({authAxios}) => {
       panelID: 'prospects-content-1',
     },
   ];
-
-  return (
+  return(
     <>
     <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}></Tabs>
     <Page
@@ -121,7 +120,6 @@ const Index = ({authAxios}) => {
       </Card>
     </Page>
     </>
-
   )
 }
 
